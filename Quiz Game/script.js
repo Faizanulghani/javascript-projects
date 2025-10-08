@@ -114,7 +114,57 @@ function selectAnswer() {
 
   answersDisabled = true;
 
-  const selectedButton = event.target
-  console.log(selectedButton);
-  
+  const selectedButton = event.target;
+  const isCorrect = selectedButton.dataset.correct === "true";
+
+  Array.from(answersContainer.children).forEach((button) => {
+    if (button.dataset.correct === "true") {
+      button.classList.add("correct");
+    } else {
+      button.classList.add("incorrect");
+    }
+  });
+
+  if (isCorrect) {
+    score++;
+    scoreSpan.textContent = score;
+  }
+
+  setTimeout(() => {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < quizQuestions.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  }, 1000);
+}
+
+function showResult() {
+  quizScreen.classList.remove("active");
+  resultScreen.classList.add("active");
+
+  finalScoreSpan.textContent = score;
+
+  const percentage = (score / quizQuestions.length) * 100;
+
+  if (percentage === 100) {
+    resultMessage.textContent = "Perfect! You're a genius!";
+  } else if (percentage >= 80) {
+    resultMessage.textContent = "Great job! You know your stuff!";
+  } else if (percentage >= 60) {
+    resultMessage.textContent = "Good effort! Keep learning!";
+  } else if (percentage >= 40) {
+    resultMessage.textContent = "Not bad! Try again to improve!";
+  } else {
+    resultMessage.textContent = "Keep studying! You'll get better!";
+  }
+}
+
+function restartQuiz() {
+  resultScreen.classList.remove("active");
+  startScreen.classList.add("active");
+
+  startQuiz();
 }
